@@ -21476,10 +21476,21 @@
 	  }
 	};
 	//1 store which store all state of whole app
-	var store = redux.createStore(reducer);
+	//Use second param to connect with Redux developer tool in Chrome
+	var store = redux.createStore(reducer, redux.compose(window.devToolsExtension ? window.devToolsExtension() : function (fun) {
+	  return fun;
+	}));
 
 	var currentState = store.getState();
 	console.log('before dispatch state', currentState);
+	//Using subscribe, shuold setup before dispatch
+	//subscribe will return a unsubcribe function, we can call if needed
+	var unsubcribe = store.subscribe(function () {
+	  var state = store.getState();
+	  console.log('New name is: ', state.name);
+	});
+	//If we call unsubcribe function, then subscribe will not be called at all
+	//unsubcribe();
 	//Action and dispatch
 	//Action should always have "type" prop
 	var action = {
@@ -21488,7 +21499,10 @@
 	};
 	//Dispatch an event to reducer
 	store.dispatch(action);
-	console.log('new state after dispatch an action', store.getState());
+	store.dispatch({
+	  type: 'CHANGE_NAME',
+	  name: 'Bean'
+	});
 
 /***/ },
 /* 174 */
