@@ -21455,11 +21455,16 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	var redux = __webpack_require__(174);
 	console.log('Using redux with React');
 	var defaultState = {
-	  name: 'Tim'
+	  name: 'Tim',
+	  iosDevices: [],
+	  phoneNumbers: []
 	};
+	var deviceCounter = 1;
 	//Reducer have to return new State
 	var reducer = function reducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultState;
@@ -21470,6 +21475,17 @@
 	    case 'CHANGE_NAME':
 	      return _extends({}, state, {
 	        name: action.name
+	      });
+	    case 'ADD_DEVICE':
+	      return _extends({}, state, {
+	        iosDevices: [].concat(_toConsumableArray(state.iosDevices), [{
+	          id: deviceCounter++,
+	          device: action.device
+	        }])
+	      });
+	    case 'ADD_PHONE_NUMBER':
+	      return _extends({}, state, {
+	        phoneNumbers: [].concat(_toConsumableArray(state.phoneNumbers), [action.phoneNumber])
 	      });
 	    default:
 	      return state;
@@ -21487,7 +21503,7 @@
 	//subscribe will return a unsubcribe function, we can call if needed
 	var unsubcribe = store.subscribe(function () {
 	  var state = store.getState();
-	  console.log('New name is: ', state.name);
+	  console.log('New state: ', state);
 	});
 	//If we call unsubcribe function, then subscribe will not be called at all
 	//unsubcribe();
@@ -21500,8 +21516,32 @@
 	//Dispatch an event to reducer
 	store.dispatch(action);
 	store.dispatch({
+	  type: 'ADD_DEVICE',
+	  device: 'iPhone'
+	});
+	store.dispatch({
+	  type: 'ADD_DEVICE',
+	  device: 'Macbook Pro'
+	});
+	store.dispatch({
+	  type: 'ADD_DEVICE',
+	  device: 'iPad Mini'
+	});
+	store.dispatch({
 	  type: 'CHANGE_NAME',
 	  name: 'Bean'
+	});
+	store.dispatch({
+	  type: 'ADD_PHONE_NUMBER',
+	  phoneNumber: 666888
+	});
+	store.dispatch({
+	  type: 'ADD_PHONE_NUMBER',
+	  phoneNumber: 111999
+	});
+	store.dispatch({
+	  type: 'ADD_PHONE_NUMBER',
+	  phoneNumber: 9669
 	});
 
 /***/ },

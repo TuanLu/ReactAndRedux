@@ -1,8 +1,11 @@
 var redux = require('redux');
 console.log('Using redux with React');
 var defaultState = {
-  name: 'Tim'
+  name: 'Tim',
+  iosDevices: [],
+  phoneNumbers: []
 };
+var deviceCounter = 1;
 //Reducer have to return new State
 var reducer = (state = defaultState, action) => {
   //state = state || {name: 'Anonymous'};
@@ -11,7 +14,26 @@ var reducer = (state = defaultState, action) => {
       return {
         ...state,
         name: action.name
-      }
+      };
+    case 'ADD_DEVICE':
+      return {
+        ...state,
+        iosDevices: [
+          ...state.iosDevices,
+          {
+            id: deviceCounter++,
+            device: action.device
+          }
+        ]
+      };
+    case 'ADD_PHONE_NUMBER':
+      return {
+        ...state,
+        phoneNumbers: [
+          ...state.phoneNumbers,
+          action.phoneNumber
+        ]
+      };
     default:
       return state;
   }
@@ -28,7 +50,7 @@ console.log('before dispatch state', currentState);
 //subscribe will return a unsubcribe function, we can call if needed
 var unsubcribe = store.subscribe(()=> {
   var state = store.getState();
-  console.log('New name is: ', state.name);
+  console.log('New state: ', state);
 });
 //If we call unsubcribe function, then subscribe will not be called at all
 //unsubcribe();
@@ -41,6 +63,30 @@ var action = {
 //Dispatch an event to reducer
 store.dispatch(action);
 store.dispatch({
+  type: 'ADD_DEVICE',
+  device: 'iPhone'
+});
+store.dispatch({
+  type: 'ADD_DEVICE',
+  device: 'Macbook Pro'
+});
+store.dispatch({
+  type: 'ADD_DEVICE',
+  device: 'iPad Mini'
+});
+store.dispatch({
   type: 'CHANGE_NAME',
   name: 'Bean'
+});
+store.dispatch({
+  type: 'ADD_PHONE_NUMBER',
+  phoneNumber: 666888
+});
+store.dispatch({
+  type: 'ADD_PHONE_NUMBER',
+  phoneNumber: 111999
+});
+store.dispatch({
+  type: 'ADD_PHONE_NUMBER',
+  phoneNumber: 9669
 });
