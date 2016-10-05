@@ -21453,193 +21453,10 @@
 
 	'use strict';
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	var redux = __webpack_require__(174);
-	var axios = __webpack_require__(188);
 	console.log('Using redux with React');
-	var defaultState = {
-	  name: 'Tim',
-	  iosDevices: [],
-	  phoneNumbers: []
-	};
-	var deviceCounter = 1;
-	//Reducer have to return new State
-	var oldReducer = function oldReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultState;
-	  var action = arguments[1];
-
-	  //state = state || {name: 'Anonymous'};
-	  switch (action.type) {
-	    case 'CHANGE_NAME':
-	      return _extends({}, state, {
-	        name: action.name
-	      });
-	    case 'ADD_DEVICE':
-	      return _extends({}, state, {
-	        iosDevices: [].concat(_toConsumableArray(state.iosDevices), [{
-	          id: deviceCounter++,
-	          device: action.device
-	        }])
-	      });
-	    case 'ADD_PHONE_NUMBER':
-	      return _extends({}, state, {
-	        phoneNumbers: [].concat(_toConsumableArray(state.phoneNumbers), [action.phoneNumber])
-	      });
-	    case 'REMOVE_PHONE_NUMBER':
-	      return _extends({}, state, {
-	        phoneNumbers: state.phoneNumbers.filter(function (_phoneNum) {
-	          return _phoneNum !== action.phoneNumber;
-	        })
-	      });
-	    case 'REMOVE_IOS_DEVICE':
-	      return _extends({}, state, {
-	        iosDevices: state.iosDevices.filter(function (device) {
-	          return device.id !== action.iosId;
-	        })
-	      });
-	    default:
-	      return state;
-	  }
-	};
 	//======================
-	// Name reducer and action generator
-	var nameReducer = function nameReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Unknown';
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'CHANGE_NAME':
-	      return action.name;
-	    default:
-	      return state;
-	  }
-	};
-	var changeName = function changeName(name) {
-	  return {
-	    type: 'CHANGE_NAME',
-	    name: name
-	  };
-	};
-	//======================
-	// iosDevices reducer and action generator
-	var iosDevicesReducer = function iosDevicesReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'ADD_DEVICE':
-	      return [].concat(_toConsumableArray(state), [{
-	        id: deviceCounter++,
-	        device: action.device
-	      }]);
-	      break;
-	    case 'REMOVE_IOS_DEVICE':
-	      return state.filter(function (device) {
-	        return device.id !== action.iosId;
-	      });
-	    default:
-	      return state;
-	  }
-	};
-	var addIOSDevice = function addIOSDevice(device) {
-	  return {
-	    type: 'ADD_DEVICE',
-	    device: device
-	  };
-	};
-	var removeIOSDevice = function removeIOSDevice(iosId) {
-	  return {
-	    type: 'REMOVE_IOS_DEVICE',
-	    iosId: iosId
-	  };
-	};
-	//======================
-	// phoneNumbersReducer reducer and action generator
-	var phoneNumbersReducer = function phoneNumbersReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'ADD_PHONE_NUMBER':
-	      return [].concat(_toConsumableArray(state), [action.phoneNumber]);
-	    case 'REMOVE_PHONE_NUMBER':
-	      return state.filter(function (phoneNum) {
-	        return phoneNum !== action.phoneNumber;
-	      });
-	    default:
-	      return state;
-	  }
-	};
-	var addPhoneNumber = function addPhoneNumber(phoneNumber) {
-	  return {
-	    type: 'ADD_PHONE_NUMBER',
-	    phoneNumber: phoneNumber
-	  };
-	};
-	var removePhoneNumber = function removePhoneNumber(phoneNumber) {
-	  return {
-	    type: 'REMOVE_PHONE_NUMBER',
-	    phoneNumber: phoneNumber
-	  };
-	};
-	//====== Asnc request reducer =======//
-	var mapReducer = function mapReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { isFetching: false, url: undefined };
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'START_LOCATION_FETCH':
-	      return {
-	        isFetching: true,
-	        url: undefined
-	      };
-	    case 'COMPLETE_LOCATION_FETCH':
-	      return {
-	        isFetching: false,
-	        url: action.url
-	      };
-	    default:
-	      return state;
-	  }
-	};
-	var startFetchingLocation = function startFetchingLocation() {
-	  return {
-	    type: 'START_LOCATION_FETCH'
-	  };
-	};
-	var completeFetchingLocation = function completeFetchingLocation(url) {
-	  return {
-	    type: 'COMPLETE_LOCATION_FETCH',
-	    url: url
-	  };
-	};
-	var fetchingLocation = function fetchingLocation() {
-	  store.dispatch(startFetchingLocation());
-	  axios.get('http://ipinfo.io').then(function (res) {
-	    if (res.data.loc) {
-	      var url = 'http://maps.google.com/?q=';
-	      store.dispatch(completeFetchingLocation(url + res.data.loc));
-	    }
-	  }, function (error) {
-	    console.warn(error);
-	  });
-	};
-	var reducer = redux.combineReducers({
-	  name: nameReducer,
-	  iosDevices: iosDevicesReducer,
-	  phoneNumbers: phoneNumbersReducer,
-	  map: mapReducer
-	});
-	//1 store which store all state of whole app
-	//Use second param to connect with Redux developer tool in Chrome
-	var store = redux.createStore(reducer, redux.compose(window.devToolsExtension ? window.devToolsExtension() : function (fun) {
-	  return fun;
-	}));
-
-	var currentState = store.getState();
+	var store = __webpack_require__(174).configure();
+	var actions = __webpack_require__(190);
 	//Using subscribe, shuold setup before dispatch
 	//subscribe will return a unsubcribe function, we can call if needed
 	var unsubcribe = store.subscribe(function () {
@@ -21661,21 +21478,53 @@
 	  name: 'Tuan Lu'
 	};
 	//Dispatch an event to reducer
-	store.dispatch(changeName('Tuan Lu'));
-	store.dispatch(addIOSDevice('iPhone'));
-	store.dispatch(addIOSDevice('Macbook Pro'));
-	store.dispatch(addIOSDevice('iPad Mini'));
-	store.dispatch(changeName("Bean"));
-	store.dispatch(addPhoneNumber(666888));
-	store.dispatch(addPhoneNumber(84333888));
-	store.dispatch(removePhoneNumber(84333888));
-	store.dispatch(removePhoneNumber(999));
-	store.dispatch(removeIOSDevice(2));
+	// store.dispatch(actions.changeName('Tuan Lu'));
+	// store.dispatch(actions.addIOSDevice('iPhone'));
+	// store.dispatch(actions.addIOSDevice('Macbook Pro'));
+	// store.dispatch(actions.addIOSDevice('iPad Mini'));
+	// store.dispatch(actions.changeName("Bean"));
+	// store.dispatch(actions.addPhoneNumber(666888));
+	// store.dispatch(actions.addPhoneNumber(84333888));
+	// store.dispatch(actions.removePhoneNumber(84333888));
+	// store.dispatch(actions.removePhoneNumber(999));
+	// store.dispatch(actions.removeIOSDevice(2));
 	//Call asnc function
-	fetchingLocation();
+	actions.fetchingLocation(store);
 
 /***/ },
 /* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var redux = __webpack_require__(175);
+
+	var _require = __webpack_require__(189);
+
+	var nameReducer = _require.nameReducer;
+	var iosDevicesReducer = _require.iosDevicesReducer;
+	var phoneNumbersReducer = _require.phoneNumbersReducer;
+	var mapReducer = _require.mapReducer;
+	var configure = exports.configure = function configure() {
+	  var reducer = redux.combineReducers({
+	    name: nameReducer,
+	    iosDevices: iosDevicesReducer,
+	    phoneNumbers: phoneNumbersReducer,
+	    map: mapReducer
+	  });
+	  //1 store which store all state of whole app
+	  //Use second param to connect with Redux developer tool in Chrome
+	  var store = redux.createStore(reducer, redux.compose(window.devToolsExtension ? window.devToolsExtension() : function (fun) {
+	    return fun;
+	  }));
+	  return store;
+	};
+
+/***/ },
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -21683,27 +21532,27 @@
 	exports.__esModule = true;
 	exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 
-	var _createStore = __webpack_require__(175);
+	var _createStore = __webpack_require__(176);
 
 	var _createStore2 = _interopRequireDefault(_createStore);
 
-	var _combineReducers = __webpack_require__(183);
+	var _combineReducers = __webpack_require__(184);
 
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 
-	var _bindActionCreators = __webpack_require__(185);
+	var _bindActionCreators = __webpack_require__(186);
 
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 
-	var _applyMiddleware = __webpack_require__(186);
+	var _applyMiddleware = __webpack_require__(187);
 
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
-	var _compose = __webpack_require__(187);
+	var _compose = __webpack_require__(188);
 
 	var _compose2 = _interopRequireDefault(_compose);
 
-	var _warning = __webpack_require__(184);
+	var _warning = __webpack_require__(185);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -21727,7 +21576,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 175 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21736,11 +21585,11 @@
 	exports.ActionTypes = undefined;
 	exports['default'] = createStore;
 
-	var _isPlainObject = __webpack_require__(176);
+	var _isPlainObject = __webpack_require__(177);
 
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-	var _symbolObservable = __webpack_require__(180);
+	var _symbolObservable = __webpack_require__(181);
 
 	var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 
@@ -21993,11 +21842,11 @@
 	}
 
 /***/ },
-/* 176 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(177),
-	    isObjectLike = __webpack_require__(179);
+	var getPrototype = __webpack_require__(178),
+	    isObjectLike = __webpack_require__(180);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -22067,10 +21916,10 @@
 
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(178);
+	var overArg = __webpack_require__(179);
 
 	/** Built-in value references. */
 	var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -22079,7 +21928,7 @@
 
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports) {
 
 	/**
@@ -22100,7 +21949,7 @@
 
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports) {
 
 	/**
@@ -22135,14 +21984,14 @@
 
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(181);
+	module.exports = __webpack_require__(182);
 
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -22151,7 +22000,7 @@
 		value: true
 	});
 
-	var _ponyfill = __webpack_require__(182);
+	var _ponyfill = __webpack_require__(183);
 
 	var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -22170,7 +22019,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22198,7 +22047,7 @@
 	};
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22206,13 +22055,13 @@
 	exports.__esModule = true;
 	exports['default'] = combineReducers;
 
-	var _createStore = __webpack_require__(175);
+	var _createStore = __webpack_require__(176);
 
-	var _isPlainObject = __webpack_require__(176);
+	var _isPlainObject = __webpack_require__(177);
 
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-	var _warning = __webpack_require__(184);
+	var _warning = __webpack_require__(185);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -22346,7 +22195,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22376,7 +22225,7 @@
 	}
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22432,7 +22281,7 @@
 	}
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22443,7 +22292,7 @@
 
 	exports['default'] = applyMiddleware;
 
-	var _compose = __webpack_require__(187);
+	var _compose = __webpack_require__(188);
 
 	var _compose2 = _interopRequireDefault(_compose);
 
@@ -22495,7 +22344,7 @@
 	}
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22538,20 +22387,163 @@
 	}
 
 /***/ },
-/* 188 */
-/***/ function(module, exports, __webpack_require__) {
+/* 189 */
+/***/ function(module, exports) {
 
-	module.exports = __webpack_require__(189);
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var nameReducer = exports.nameReducer = function nameReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Unknown';
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'CHANGE_NAME':
+	      return action.name;
+	    default:
+	      return state;
+	  }
+	};
+	var deviceCounter = 1;
+	var iosDevicesReducer = exports.iosDevicesReducer = function iosDevicesReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'ADD_DEVICE':
+	      return [].concat(_toConsumableArray(state), [{
+	        id: deviceCounter++,
+	        device: action.device
+	      }]);
+	      break;
+	    case 'REMOVE_IOS_DEVICE':
+	      return state.filter(function (device) {
+	        return device.id !== action.iosId;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	var phoneNumbersReducer = exports.phoneNumbersReducer = function phoneNumbersReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'ADD_PHONE_NUMBER':
+	      return [].concat(_toConsumableArray(state), [action.phoneNumber]);
+	    case 'REMOVE_PHONE_NUMBER':
+	      return state.filter(function (phoneNum) {
+	        return phoneNum !== action.phoneNumber;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	var mapReducer = exports.mapReducer = function mapReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { isFetching: false, url: undefined };
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'START_LOCATION_FETCH':
+	      return {
+	        isFetching: true,
+	        url: undefined
+	      };
+	    case 'COMPLETE_LOCATION_FETCH':
+	      return {
+	        isFetching: false,
+	        url: action.url
+	      };
+	    default:
+	      return state;
+	  }
+	};
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
-	var bind = __webpack_require__(191);
-	var Axios = __webpack_require__(192);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var axios = __webpack_require__(191);
+	var changeName = exports.changeName = function changeName(name) {
+	  return {
+	    type: 'CHANGE_NAME',
+	    name: name
+	  };
+	};
+	var addIOSDevice = exports.addIOSDevice = function addIOSDevice(device) {
+	  return {
+	    type: 'ADD_DEVICE',
+	    device: device
+	  };
+	};
+	var removeIOSDevice = exports.removeIOSDevice = function removeIOSDevice(iosId) {
+	  return {
+	    type: 'REMOVE_IOS_DEVICE',
+	    iosId: iosId
+	  };
+	};
+	var addPhoneNumber = exports.addPhoneNumber = function addPhoneNumber(phoneNumber) {
+	  return {
+	    type: 'ADD_PHONE_NUMBER',
+	    phoneNumber: phoneNumber
+	  };
+	};
+	var removePhoneNumber = exports.removePhoneNumber = function removePhoneNumber(phoneNumber) {
+	  return {
+	    type: 'REMOVE_PHONE_NUMBER',
+	    phoneNumber: phoneNumber
+	  };
+	};
+	var startFetchingLocation = exports.startFetchingLocation = function startFetchingLocation() {
+	  return {
+	    type: 'START_LOCATION_FETCH'
+	  };
+	};
+	var completeFetchingLocation = exports.completeFetchingLocation = function completeFetchingLocation(url) {
+	  return {
+	    type: 'COMPLETE_LOCATION_FETCH',
+	    url: url
+	  };
+	};
+	var fetchingLocation = exports.fetchingLocation = function fetchingLocation(store) {
+	  console.log('Store of app here', store);
+	  store.dispatch(startFetchingLocation());
+	  axios.get('http://ipinfo.io').then(function (res) {
+	    if (res.data.loc) {
+	      var url = 'http://maps.google.com/?q=';
+	      store.dispatch(completeFetchingLocation(url + res.data.loc));
+	      store.dispatch(addPhoneNumber(888888));
+	    }
+	  }, function (error) {
+	    console.warn(error);
+	  });
+	};
+
+/***/ },
+/* 191 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(192);
+
+/***/ },
+/* 192 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var utils = __webpack_require__(193);
+	var bind = __webpack_require__(194);
+	var Axios = __webpack_require__(195);
 
 	/**
 	 * Create an instance of Axios
@@ -22587,7 +22579,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(209);
+	axios.spread = __webpack_require__(212);
 
 	module.exports = axios;
 
@@ -22596,12 +22588,12 @@
 
 
 /***/ },
-/* 190 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(191);
+	var bind = __webpack_require__(194);
 
 	/*global toString:true*/
 
@@ -22901,7 +22893,7 @@
 
 
 /***/ },
-/* 191 */
+/* 194 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22918,17 +22910,17 @@
 
 
 /***/ },
-/* 192 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defaults = __webpack_require__(193);
-	var utils = __webpack_require__(190);
-	var InterceptorManager = __webpack_require__(195);
-	var dispatchRequest = __webpack_require__(196);
-	var isAbsoluteURL = __webpack_require__(207);
-	var combineURLs = __webpack_require__(208);
+	var defaults = __webpack_require__(196);
+	var utils = __webpack_require__(193);
+	var InterceptorManager = __webpack_require__(198);
+	var dispatchRequest = __webpack_require__(199);
+	var isAbsoluteURL = __webpack_require__(210);
+	var combineURLs = __webpack_require__(211);
 
 	/**
 	 * Create a new instance of Axios
@@ -23009,13 +23001,13 @@
 
 
 /***/ },
-/* 193 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
-	var normalizeHeaderName = __webpack_require__(194);
+	var utils = __webpack_require__(193);
+	var normalizeHeaderName = __webpack_require__(197);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -23087,12 +23079,12 @@
 
 
 /***/ },
-/* 194 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
+	var utils = __webpack_require__(193);
 
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -23105,12 +23097,12 @@
 
 
 /***/ },
-/* 195 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
+	var utils = __webpack_require__(193);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -23163,13 +23155,13 @@
 
 
 /***/ },
-/* 196 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(190);
-	var transformData = __webpack_require__(197);
+	var utils = __webpack_require__(193);
+	var transformData = __webpack_require__(200);
 
 	/**
 	 * Dispatch a request to the server using whichever adapter
@@ -23210,10 +23202,10 @@
 	    adapter = config.adapter;
 	  } else if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(198);
+	    adapter = __webpack_require__(201);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(198);
+	    adapter = __webpack_require__(201);
 	  }
 
 	  return Promise.resolve(config)
@@ -23245,12 +23237,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 197 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
+	var utils = __webpack_require__(193);
 
 	/**
 	 * Transform the data for a request or a response
@@ -23271,18 +23263,18 @@
 
 
 /***/ },
-/* 198 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(190);
-	var settle = __webpack_require__(199);
-	var buildURL = __webpack_require__(202);
-	var parseHeaders = __webpack_require__(203);
-	var isURLSameOrigin = __webpack_require__(204);
-	var createError = __webpack_require__(200);
-	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(205);
+	var utils = __webpack_require__(193);
+	var settle = __webpack_require__(202);
+	var buildURL = __webpack_require__(205);
+	var parseHeaders = __webpack_require__(206);
+	var isURLSameOrigin = __webpack_require__(207);
+	var createError = __webpack_require__(203);
+	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(208);
 
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -23376,7 +23368,7 @@
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(206);
+	      var cookies = __webpack_require__(209);
 
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -23440,12 +23432,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 199 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createError = __webpack_require__(200);
+	var createError = __webpack_require__(203);
 
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -23471,12 +23463,12 @@
 
 
 /***/ },
-/* 200 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var enhanceError = __webpack_require__(201);
+	var enhanceError = __webpack_require__(204);
 
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -23494,7 +23486,7 @@
 
 
 /***/ },
-/* 201 */
+/* 204 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23519,12 +23511,12 @@
 
 
 /***/ },
-/* 202 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
+	var utils = __webpack_require__(193);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -23593,12 +23585,12 @@
 
 
 /***/ },
-/* 203 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
+	var utils = __webpack_require__(193);
 
 	/**
 	 * Parse headers into an object
@@ -23636,12 +23628,12 @@
 
 
 /***/ },
-/* 204 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
+	var utils = __webpack_require__(193);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -23710,7 +23702,7 @@
 
 
 /***/ },
-/* 205 */
+/* 208 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23752,12 +23744,12 @@
 
 
 /***/ },
-/* 206 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(190);
+	var utils = __webpack_require__(193);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -23811,7 +23803,7 @@
 
 
 /***/ },
-/* 207 */
+/* 210 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23831,7 +23823,7 @@
 
 
 /***/ },
-/* 208 */
+/* 211 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23849,7 +23841,7 @@
 
 
 /***/ },
-/* 209 */
+/* 212 */
 /***/ function(module, exports) {
 
 	'use strict';
