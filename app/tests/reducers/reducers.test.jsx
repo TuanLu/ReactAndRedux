@@ -1,5 +1,8 @@
 var expect = require('expect');
 var reducers = require('reducers');
+//reducer are pure function, make sure the input and the output not change
+//that why we use deep-freeze-strict lib to track for us
+var df = require('deep-freeze-strict');
 describe('Test Reducer', () => {
   describe('nameReducer', () => {
     it('shuold change name properly', () => {
@@ -7,7 +10,7 @@ describe('Test Reducer', () => {
         type: 'CHANGE_NAME',
         name: 'Tuan Lu Duc'
       };
-      var res = reducers.nameReducer('', action);
+      var res = reducers.nameReducer(df(''), df(action));
       expect(action.name).toEqual(res);
     });
   });
@@ -23,7 +26,7 @@ describe('Test Reducer', () => {
           device: 'iPod'
         }
       ]
-      var res = reducers.iosDevicesReducer([], action);
+      var res = reducers.iosDevicesReducer(df([]), df(action));
       expect(res).toEqual(devices);
     });
     it('should add a device to exist list', () => {
@@ -47,7 +50,7 @@ describe('Test Reducer', () => {
           device: 'iPod'
         }
       ];
-      var res = reducers.iosDevicesReducer(defaultDevices, action);
+      var res = reducers.iosDevicesReducer(df(defaultDevices), df(action));
       expect(res).toEqual(devices);
     });
     it('should remove device from list', () => {
@@ -71,13 +74,13 @@ describe('Test Reducer', () => {
         type: 'REMOVE_IOS_DEVICE',
         iosId: 2
       };
-      var res = reducers.iosDevicesReducer(devices, action);
+      var res = reducers.iosDevicesReducer(df(devices), df(action));
       expect(res).toEqual(expectedResult);
       var action = {
         type: 'REMOVE_IOS_DEVICE',
         iosId: 5
       };
-      var res = reducers.iosDevicesReducer(devices, action);
+      var res = reducers.iosDevicesReducer(df(devices), df(action));
       expect(res).toEqual(devices);
     });
   });
@@ -88,7 +91,7 @@ describe('Test Reducer', () => {
         type: 'REMOVE_PHONE_NUMBER',
         phoneNumber: 777
       };
-      var res = reducers.phoneNumbersReducer([666,777,888], action);
+      var res = reducers.phoneNumbersReducer(df([666,777,888]), df(action));
       expect(res).toEqual(phoneNumbers);
     });
     it('shuold add phone number to list', () => {
@@ -97,7 +100,7 @@ describe('Test Reducer', () => {
         type: 'ADD_PHONE_NUMBER',
         phoneNumber: 666
       };
-      var res = reducers.phoneNumbersReducer([], action);
+      var res = reducers.phoneNumbersReducer(df([]), df(action));
       expect(res).toEqual(phoneNumbers);
     });
   });
