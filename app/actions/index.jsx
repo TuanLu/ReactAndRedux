@@ -53,3 +53,9 @@ export var fetchingLocation = (store) => {
     console.warn(error);
   });
 };
+export var uploadPhoto = (url) => {
+  return {
+    type: 'UPLOAD_PHOTO',
+    url
+  };
+};
