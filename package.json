@@ -30,6 +30,7 @@
     "karma-webpack": "^1.8.0",
     "mocha": "^3.1.0",
     "react-addons-test-utils": "^15.3.2",
+    "react-redux": "^4.4.5",
     "redux": "^3.6.0",
     "webpack": "^1.13.2"
   }

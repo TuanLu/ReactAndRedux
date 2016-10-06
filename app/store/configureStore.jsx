@@ -1,5 +1,6 @@
 var redux = require('redux');
-var {nameReducer, iosDevicesReducer, phoneNumbersReducer, mapReducer} = require('./../reducers/index');
+var reducers = require('reducers');
+var {nameReducer, iosDevicesReducer, phoneNumbersReducer, mapReducer} = reducers;
 export var configure = () => {
   var reducer = redux.combineReducers({
     name: nameReducer,
