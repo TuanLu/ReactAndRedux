@@ -1,6 +1,7 @@
 console.log('Testing redux thunk middleware!');
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 const defaultInfo = {
   name: 'Tim',
   age: 25,
@@ -25,7 +26,7 @@ const rootReducer = (state = defaultInfo, action) => {
 //Use middleware for asnc action creator
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk)
+  applyMiddleware(thunk, logger())
 );
 
 //Normal action creator
@@ -58,9 +59,9 @@ var waitToValidToChangeName = function() {
     },2000);
   }
 }
-store.subscribe(function() {
-  console.log('new state', store.getState());
-});
+// store.subscribe(function() {
+//   console.log('new state', store.getState());
+// });
 store.dispatch(normalActionCreator('My Tra'));
 store.dispatch(normalActionCreator('Tuan Lu'));
 store.dispatch(waitToValidToChangeName());
