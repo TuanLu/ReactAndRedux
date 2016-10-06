@@ -2,6 +2,8 @@ console.log('Testing redux thunk middleware!');
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
+import axios from 'axios';
+import promise from 'redux-promise-middleware';
 const defaultInfo = {
   name: 'Tim',
   age: 25,
@@ -26,7 +28,7 @@ const rootReducer = (state = defaultInfo, action) => {
 //Use middleware for asnc action creator
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk, logger())
+  applyMiddleware(thunk, logger(), promise())
 );
 
 //Normal action creator
@@ -65,3 +67,8 @@ var waitToValidToChangeName = function() {
 store.dispatch(normalActionCreator('My Tra'));
 store.dispatch(normalActionCreator('Tuan Lu'));
 store.dispatch(waitToValidToChangeName());
+//Using promise middleware can return data as promise
+store.dispatch({
+  'type': 'FECT_DATA_USING_PROMISE',
+  data: axios.get('http://google.com/?api')
+});
