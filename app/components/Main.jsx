@@ -7,6 +7,8 @@ var Main = React.createClass({
     return (
       <div>
         Main.jsx [Main Component Content]
+        <h3>New content here</h3>
+        <h4>Logo components</h4>
       </div>
     );
   }

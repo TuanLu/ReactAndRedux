@@ -1,4 +1,5 @@
 import ReduxThunkExample from './redux-thunk';
+import Logo from './components/Logo';
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Main = require('Main');
@@ -14,6 +15,7 @@ var Main = require('Main');
 ReactDOM.render(
   <div>
       <Main />
+      <Logo />
   </div>
   ,
   document.getElementById('app')
